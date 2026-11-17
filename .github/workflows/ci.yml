@@ -1,0 +1,45 @@
+name: Task App CI
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Get source code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Install Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Install backend dependencies
+      - name: Install backend dependencies
+        working-directory: ./server
+        run: npm ci
+
+      # Check backend syntax
+      - name: Check backend syntax
+        working-directory: ./server
+        run: node --check index.js
+
+      # Install frontend dependencies
+      - name: Install frontend dependencies
+        working-directory: ./client
+        run: npm ci
+
+      # Build React application
+      - name: Build frontend
+        working-directory: ./client
+        run: npm run build
