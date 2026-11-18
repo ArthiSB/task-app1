@@ -76,9 +76,12 @@ app.delete("/api/tasks/:id", async (req, res) => {
 // Check the DB connection before accepting requests
 pool
   .query("SELECT 1")
-  .then(() =>
-    app.listen(PORT, () =>
-      console.log(`API running at http://localhost:${PORT}`),
-    ),
-  )
-  .catch((err) => console.error("Cannot connect to MySQL:", err.message));
+  .then(() => {
+    app.listen(PORT, "0.0.0.0", () => {
+      console.log(`API running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Cannot connect to MySQL:", err.message);
+    process.exit(1);
+  });
